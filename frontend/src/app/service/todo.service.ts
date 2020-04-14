@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Todo } from '../model/todo';
+import {API_URL} from "../app.constants";
 
 @Injectable({
   providedIn: 'root'
 })
 export class TodoService {
 
-  host = `http://localhost:8080/users`;
+  host = `${API_URL}/users`;
 
   constructor(private http: HttpClient) { }
 

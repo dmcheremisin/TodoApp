@@ -1,18 +1,19 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import {BrowserModule} from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
+import {FormsModule} from '@angular/forms';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { WelcomeComponent } from './welcome/welcome.component';
-import { LoginComponent } from './login/login.component';
-import { ErrorComponent } from './error/error.component';
-import { ListTodosComponent } from './list-todos/list-todos.component';
-import { MenuComponent } from './menu/menu.component';
-import { FooterComponent } from './footer/footer.component';
-import { LogoutComponent } from './logout/logout.component';
-import { TodoComponent } from './todo/todo.component';
+import {AppRoutingModule} from './app-routing.module';
+import {AppComponent} from './app.component';
+import {WelcomeComponent} from './welcome/welcome.component';
+import {LoginComponent} from './login/login.component';
+import {ErrorComponent} from './error/error.component';
+import {ListTodosComponent} from './list-todos/list-todos.component';
+import {MenuComponent} from './menu/menu.component';
+import {FooterComponent} from './footer/footer.component';
+import {LogoutComponent} from './logout/logout.component';
+import {TodoComponent} from './todo/todo.component';
+import {HttpBasicAuthInterceptorService} from "./service/http-basic-auth-interceptor.service";
 
 @NgModule({
   declarations: [
@@ -32,7 +33,13 @@ import { TodoComponent } from './todo/todo.component';
     FormsModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpBasicAuthInterceptorService,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

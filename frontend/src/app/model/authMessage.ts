@@ -1,3 +1,3 @@
-export class WelcomeMessage{
+export class AuthMessage{
     constructor(public message:string){}
 }

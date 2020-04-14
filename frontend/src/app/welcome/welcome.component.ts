@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {AppComponent} from '../app.component';
 import {ActivatedRoute} from '@angular/router';
 import {WelcomeService} from '../service/welcome.service';
-import {WelcomeMessage} from '../model/welcomeMessage';
+import {AuthMessage} from '../model/authMessage';
 
 @Component({
   selector: 'app-welcome',
@@ -28,7 +28,7 @@ export class WelcomeComponent implements OnInit {
         error => this.handleErrorResponse(error));
   }
 
-  private handleSuccessResponse(response: WelcomeMessage): void {
+  private handleSuccessResponse(response: AuthMessage): void {
     this.welcomeMessage = response.message;
   }
 
