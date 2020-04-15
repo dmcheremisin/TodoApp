@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {AuthMessage} from "../model/authMessage";
+import {HttpClient} from "@angular/common/http";
 import {map} from "rxjs/operators";
 import {API_URL} from "../app.constants";
 
@@ -10,20 +9,16 @@ export const USER_NAME = "userName";
 @Injectable({
   providedIn: 'root'
 })
-export class BasicAuthenticationService {
+export class JwtAuthenticationService {
 
   constructor(private http: HttpClient) {
   }
 
-  executeAuthentication(userName: string, password: string) {
-    let basicAuthHeader = 'Basic ' + window.btoa(userName + ':' + password);
-    let authHeader = new HttpHeaders({
-      Authorization: basicAuthHeader
-    });
-    return this.http.get<AuthMessage>(`${API_URL}/auth`, {headers: authHeader})
+  executeAuthentication(username: string, password: string) {
+    return this.http.post<any>(`${API_URL}/auth`, {username, password})
       .pipe(map(data => {
-        sessionStorage.setItem(USER_NAME, userName);
-        sessionStorage.setItem(TOKEN, basicAuthHeader);
+        sessionStorage.setItem(USER_NAME, username);
+        sessionStorage.setItem(TOKEN, `Bearer ${data.token}`);
         return data;
       }))
   }

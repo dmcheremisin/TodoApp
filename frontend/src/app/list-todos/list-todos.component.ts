@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { Todo } from '../model/todo';
-import { TodoService } from '../service/todo.service';
-import { Router } from '@angular/router';
-import {BasicAuthenticationService} from "../service/basic-authentication.service";
+import {Component, OnInit} from '@angular/core';
+import {Todo} from '../model/todo';
+import {TodoService} from '../service/todo.service';
+import {Router} from '@angular/router';
+import {JwtAuthenticationService} from "../service/jwt-authentication.service";
 
 @Component({
   selector: 'app-list-todos',
@@ -18,7 +18,7 @@ export class ListTodosComponent implements OnInit {
   constructor(
     private router: Router,
     private todoService: TodoService,
-    private basicAuthService: BasicAuthenticationService) {}
+    private basicAuthService: JwtAuthenticationService) {}
 
   ngOnInit(): void {
     this.userName = this.basicAuthService.getUserName();

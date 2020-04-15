@@ -13,7 +13,7 @@ import {MenuComponent} from './menu/menu.component';
 import {FooterComponent} from './footer/footer.component';
 import {LogoutComponent} from './logout/logout.component';
 import {TodoComponent} from './todo/todo.component';
-import {HttpBasicAuthInterceptorService} from "./service/http-basic-auth-interceptor.service";
+import {HttpAuthInterceptorService} from "./service/http-auth-interceptor.service";
 
 @NgModule({
   declarations: [
@@ -36,7 +36,7 @@ import {HttpBasicAuthInterceptorService} from "./service/http-basic-auth-interce
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: HttpBasicAuthInterceptorService,
+      useClass: HttpAuthInterceptorService,
       multi: true
     }
   ],

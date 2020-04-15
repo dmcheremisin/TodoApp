@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {BasicAuthenticationService} from "../service/basic-authentication.service";
+import {JwtAuthenticationService} from "../service/jwt-authentication.service";
 
 @Component({
   selector: 'app-logout',
@@ -8,7 +8,7 @@ import {BasicAuthenticationService} from "../service/basic-authentication.servic
 })
 export class LogoutComponent implements OnInit {
 
-  constructor(private authService : BasicAuthenticationService) { }
+  constructor(private authService : JwtAuthenticationService) { }
 
   ngOnInit(): void {
     this.authService.logout();

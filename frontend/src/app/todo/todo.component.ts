@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {TodoService} from '../service/todo.service';
 import {Todo} from '../model/todo';
-import {BasicAuthenticationService} from "../service/basic-authentication.service";
+import {JwtAuthenticationService} from "../service/jwt-authentication.service";
 
 @Component({
   selector: 'app-todo',
@@ -18,7 +18,7 @@ export class TodoComponent implements OnInit {
   constructor(private activatedRoute: ActivatedRoute,
               private service: TodoService,
               private router: Router,
-              private authService: BasicAuthenticationService) {
+              private authService: JwtAuthenticationService) {
   }
 
   ngOnInit(): void {
@@ -29,7 +29,7 @@ export class TodoComponent implements OnInit {
       this.service.getTodo(this.userName, this.id)
         .subscribe(resp => this.todo = resp);
     } else {
-      this.todo = new Todo(0, '', new Date(), false);
+      this.todo = new Todo(0, '', null, false);
     }
   }
 
