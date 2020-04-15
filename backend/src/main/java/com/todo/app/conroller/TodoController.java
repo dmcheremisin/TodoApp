@@ -1,7 +1,7 @@
 package com.todo.app.conroller;
 
-import com.todo.app.model.Todo;
-import com.todo.app.service.TodoHardcodedService;
+import com.todo.app.entity.Todo;
+import com.todo.app.service.TodoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,22 +17,24 @@ import java.util.List;
 @RequestMapping("/users/{username}/todos")
 public class TodoController {
 
-    private final TodoHardcodedService todoHardcodedService;
+    private final TodoService todoService;
 
     @GetMapping
     public List<Todo> getUserTodos(@PathVariable String username) {
-        return todoHardcodedService.getTodos();
+        return todoService.getTodos(username);
     }
 
     @GetMapping("/{id}")
     public Todo getTodo(@PathVariable String username, @PathVariable Integer id) {
-        return todoHardcodedService.getTodoById(id);
+        return todoService.getTodoByIdAndUser(id, username);
     }
 
     @PostMapping
     public ResponseEntity<Void> createTodo(@PathVariable String username, @RequestBody Todo todo) {
         todo.setId(null);
-        Todo createdTodo = todoHardcodedService.saveTodo(todo);
+        todo.setUser(username);
+        todo.setDone(false);
+        Todo createdTodo = todoService.saveTodo(todo);
 
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -45,13 +47,15 @@ public class TodoController {
 
     @PutMapping("/{id}")
     public Todo updateTodo(@PathVariable String username, @PathVariable Integer id, @RequestBody Todo todo) {
+        todoService.getTodoByIdAndUser(id, username); // check exists
         todo.setId(id);
-        return todoHardcodedService.saveTodo(todo);
+        return todoService.saveTodo(todo);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     public void deleteTodo(@PathVariable String username, @PathVariable Integer id) {
-        todoHardcodedService.deleteTodo(id);
+        todoService.getTodoByIdAndUser(id, username); // check exists
+        todoService.deleteTodo(id);
     }
 }

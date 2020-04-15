@@ -1,10 +1,10 @@
 package com.todo.app.conroller;
 
 import com.todo.app.jwt.AuthenticationException;
-import com.todo.app.jwt.JwtTokenUtil;
-import com.todo.app.jwt.JwtUserDetails;
 import com.todo.app.model.JwtTokenRequest;
 import com.todo.app.model.JwtTokenResponse;
+import com.todo.app.service.JpaUserDetailsService;
+import com.todo.app.util.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -14,7 +14,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,7 +33,7 @@ public class JwtAuthenticationRestController {
     private JwtTokenUtil jwtTokenUtil;
 
     @Autowired
-    private UserDetailsService jwtInMemoryUserDetailsService;
+    private JpaUserDetailsService jpaUserDetailsService;
 
     @PostMapping("${jwt.get.token.uri}")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtTokenRequest authenticationRequest)
@@ -42,7 +41,7 @@ public class JwtAuthenticationRestController {
 
         authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
 
-        final UserDetails userDetails = jwtInMemoryUserDetailsService
+        final UserDetails userDetails = jpaUserDetailsService
                 .loadUserByUsername(authenticationRequest.getUsername());
 
         final String token = jwtTokenUtil.generateToken(userDetails);
@@ -55,7 +54,7 @@ public class JwtAuthenticationRestController {
         String authToken = request.getHeader(tokenHeader);
         final String token = authToken.substring(7);
         String username = jwtTokenUtil.getUsernameFromToken(token);
-        JwtUserDetails user = (JwtUserDetails) jwtInMemoryUserDetailsService.loadUserByUsername(username);
+        jpaUserDetailsService.loadUserByUsername(username);
 
         if (jwtTokenUtil.canTokenBeRefreshed(token)) {
             String refreshedToken = jwtTokenUtil.refreshToken(token);

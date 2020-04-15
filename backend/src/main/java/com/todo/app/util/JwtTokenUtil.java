@@ -1,4 +1,4 @@
-package com.todo.app.jwt;
+package com.todo.app.util;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -81,9 +81,8 @@ public class JwtTokenUtil {
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
-        JwtUserDetails user = (JwtUserDetails) userDetails;
         final String username = getUsernameFromToken(token);
-        return (username.equals(user.getUsername()) && !isTokenExpired(token));
+        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
     private Date calculateExpirationDate(Date createdDate) {
