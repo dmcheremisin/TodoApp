@@ -6,7 +6,7 @@
 
         <ul class="navbar-nav">
             <li *ngIf="isUserLoggedIn()">
-                <a (click)="navigateToWelcome()"  class="nav-link">Welcome</a>
+                <a href="#" (click)="navigateToWelcome()"  class="nav-link">Welcome</a>
             </li>
             <li *ngIf="isUserLoggedIn()">
                 <a routerLink="/todos" class="nav-link">Todos</a>
