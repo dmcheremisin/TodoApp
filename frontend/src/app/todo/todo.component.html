@@ -41,6 +41,17 @@
       </label>
     </fieldset>
 
+    <fieldset class="form-group">
+      <label>
+        Done:
+        <input type="checkbox"
+               [(ngModel)]="todo.done"
+               class="form-control"
+               name="done"
+        />
+      </label>
+    </fieldset>
+
     <button type="submit" class="btn btn-success">Submit</button>
 
   </form>
