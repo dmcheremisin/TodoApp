@@ -14,6 +14,7 @@ import {FooterComponent} from './footer/footer.component';
 import {LogoutComponent} from './logout/logout.component';
 import {TodoComponent} from './todo/todo.component';
 import {HttpAuthInterceptorService} from "./service/http-auth-interceptor.service";
+import {RegisterComponent} from './register/register.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import {HttpAuthInterceptorService} from "./service/http-auth-interceptor.servic
     MenuComponent,
     FooterComponent,
     LogoutComponent,
-    TodoComponent
+    TodoComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,

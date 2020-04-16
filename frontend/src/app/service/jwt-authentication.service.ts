@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {map} from "rxjs/operators";
 import {API_URL} from "../app.constants";
+import {User} from "../model/user";
 
 export const TOKEN = "token";
 export const USER_NAME = "userName";
@@ -14,10 +15,10 @@ export class JwtAuthenticationService {
   constructor(private http: HttpClient) {
   }
 
-  executeAuthentication(username: string, password: string) {
-    return this.http.post<any>(`${API_URL}/auth`, {username, password})
+  executeAuthentication(user: User) {
+    return this.http.post<any>(`${API_URL}/auth`, user)
       .pipe(map(data => {
-        sessionStorage.setItem(USER_NAME, username);
+        sessionStorage.setItem(USER_NAME, user.username);
         sessionStorage.setItem(TOKEN, `Bearer ${data.token}`);
         return data;
       }))

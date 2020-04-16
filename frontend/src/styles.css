@@ -1,2 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @import url(https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css);
+
+.ng-invalid:not(form){
+  border-left: red 5px solid ;
+}

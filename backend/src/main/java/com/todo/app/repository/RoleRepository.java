@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface RoleRepository extends CrudRepository<Role, Integer> {
 
-    List<Role> findByEmail(String email);
+    List<Role> findByUsername(String username);
 }
