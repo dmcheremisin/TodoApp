@@ -41,7 +41,7 @@
       </label>
     </fieldset>
 
-    <fieldset class="form-group">
+    <fieldset class="form-group" *ngIf="todo.id != 0">
       <label>
         Done:
         <input type="checkbox"

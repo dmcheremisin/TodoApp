@@ -1,10 +1,9 @@
 package com.todo.app.config;
 
-import com.todo.app.jwt.JwtTokenAuthorizationOncePerRequestFilter;
-import com.todo.app.jwt.JwtUnAuthorizedResponseAuthenticationEntryPoint;
+import com.todo.app.auth.JwtTokenAuthorizationOncePerRequestFilter;
+import com.todo.app.auth.JwtUnAuthorizedResponseAuthenticationEntryPoint;
 import com.todo.app.service.JpaUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,11 +16,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-@EnableWebSecurity
-public class JWTWebSecurityConfig extends WebSecurityConfigurerAdapter {
+import static com.todo.app.util.RestConstants.*;
 
-    @Value("${jwt.get.token.uri}")
-    private String authenticationPath;
+@EnableWebSecurity
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private JwtUnAuthorizedResponseAuthenticationEntryPoint jwtUnAuthorizedResponseAuthenticationEntryPoint;
@@ -34,8 +32,10 @@ public class JWTWebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(jpaUserDetailsService).passwordEncoder(passwordEncoderBean());
+    public void configureAuth(AuthenticationManagerBuilder auth) throws Exception {
+        auth
+                .userDetailsService(jpaUserDetailsService)
+                .passwordEncoder(passwordEncoderBean());
     }
 
     @Bean
@@ -59,21 +59,16 @@ public class JWTWebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .antMatchers(HttpMethod.POST, authenticationPath).permitAll()
-                .antMatchers(HttpMethod.POST, "/register").permitAll()
-                .antMatchers(HttpMethod.GET, "/*").permitAll()
-                .antMatchers(HttpMethod.GET, "/welcome/*").permitAll()
-                .antMatchers(HttpMethod.GET, "/todos/*").permitAll()
-                .antMatchers("/h2-console/**/**").permitAll()
-                .antMatchers("/users/**").hasAnyRole("ADMIN", "USER")
+                .antMatchers(HttpMethod.OPTIONS, SECURED_API_URL).permitAll() // allows preflights for secured urls
+                .antMatchers(HttpMethod.POST, AUTH_URL).permitAll() // allows authorization
+                .antMatchers(HttpMethod.POST, REGISTER_URL).permitAll() // allows registration
+                .antMatchers(SECURED_API_URL).hasAnyRole("ADMIN", "USER") // secures all rest api urls
+                .antMatchers("/**").permitAll() // allows all other urls(static resources, angular routs,...)
                 .anyRequest().authenticated();
 
         httpSecurity.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
-        httpSecurity
-                .headers()
-                .frameOptions().sameOrigin() // H2 Console Needs this setting
-                .cacheControl(); // disable caching
+        // for H2 Console
+        httpSecurity.headers().frameOptions().sameOrigin().cacheControl();
     }
 }

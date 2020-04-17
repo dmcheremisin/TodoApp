@@ -6,11 +6,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin("http://localhost:4200")
+import static com.todo.app.util.RestConstants.WELCOME_URL;
+
 @RestController
 public class WelcomeController {
 
-    @GetMapping("/hello/{name}")
+    @GetMapping(WELCOME_URL)
     public WelcomeModel getWelcomeModel(@PathVariable String name) {
         WelcomeModel welcomeModel = new WelcomeModel();
         welcomeModel.setMessage(String.format("Hello, %s, from rest service", name));

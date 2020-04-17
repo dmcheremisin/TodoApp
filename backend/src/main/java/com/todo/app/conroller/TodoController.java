@@ -11,10 +11,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
-@CrossOrigin("http://localhost:4200")
+import static com.todo.app.util.RestConstants.TODO_URL;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/users/{username}/todos")
+@RequestMapping(TODO_URL)
 public class TodoController {
 
     private final TodoService todoService;

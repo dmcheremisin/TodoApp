@@ -1,12 +1,10 @@
-package com.todo.app.jwt;
+package com.todo.app.auth;
 
 import com.todo.app.service.JpaUserDetailsService;
 import com.todo.app.util.JwtTokenUtil;
 import io.jsonwebtoken.ExpiredJwtException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,10 +18,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static com.todo.app.util.RestConstants.AUTH_HEADER;
+
+@Slf4j
 @Component
 public class JwtTokenAuthorizationOncePerRequestFilter extends OncePerRequestFilter {
-
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private JpaUserDetailsService jpaUserDetailsService;
@@ -31,15 +30,12 @@ public class JwtTokenAuthorizationOncePerRequestFilter extends OncePerRequestFil
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
 
-	@Value("${jwt.http.request.header}")
-	private String tokenHeader;
-
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws ServletException, IOException {
-		logger.debug("Authentication Request For '{}'", request.getRequestURL());
+		log.debug("Authentication Request For '{}'", request.getRequestURL());
 
-		final String requestTokenHeader = request.getHeader(this.tokenHeader);
+		final String requestTokenHeader = request.getHeader(AUTH_HEADER);
 
 		String username = null;
 		String jwtToken = null;
@@ -48,20 +44,20 @@ public class JwtTokenAuthorizationOncePerRequestFilter extends OncePerRequestFil
 			try {
 				username = jwtTokenUtil.getUsernameFromToken(jwtToken);
 			} catch (IllegalArgumentException e) {
-				logger.error("JWT_TOKEN_UNABLE_TO_GET_USERNAME", e);
+				log.error("JWT_TOKEN_UNABLE_TO_GET_USERNAME", e);
 			} catch (ExpiredJwtException e) {
-				logger.warn("JWT_TOKEN_EXPIRED", e);
+				log.warn("JWT_TOKEN_EXPIRED", e);
 			}
 		}
 
-		logger.debug("JWT_TOKEN_USERNAME_VALUE '{}'", username);
+		log.debug("JWT_TOKEN_USERNAME_VALUE '{}'", username);
 		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-			UserDetails userDetails = this.jpaUserDetailsService.loadUserByUsername(username);
+			UserDetails userDetails = jpaUserDetailsService.loadUserByUsername(username);
 
 			if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
-				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-						userDetails, null, userDetails.getAuthorities());
+				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+						new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 				usernamePasswordAuthenticationToken
 						.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 				SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);

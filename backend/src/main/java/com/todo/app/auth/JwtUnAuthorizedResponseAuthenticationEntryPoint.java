@@ -1,4 +1,4 @@
-package com.todo.app.jwt;
+package com.todo.app.auth;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;

@@ -1,4 +1,4 @@
-package com.todo.app.jwt;
+package com.todo.app.exception;
 
 public class AuthenticationException extends RuntimeException {
 

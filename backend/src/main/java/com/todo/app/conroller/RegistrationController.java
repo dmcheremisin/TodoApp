@@ -5,20 +5,23 @@ import com.todo.app.model.WelcomeModel;
 import com.todo.app.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
-@CrossOrigin("http://localhost:4200")
+import static com.todo.app.util.RestConstants.REGISTER_URL;
+
 @RestController
-@RequestMapping("/register")
 @RequiredArgsConstructor
 @Validated
 public class RegistrationController {
 
     private final UserService userService;
 
-    @PostMapping
+    @PostMapping(REGISTER_URL)
     public WelcomeModel registerUser(@RequestBody @Valid RegistrationModel registrationModel) {
         userService.registerUser(registrationModel);
         return new WelcomeModel("Registration is successful");

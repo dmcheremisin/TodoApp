@@ -8,11 +8,11 @@ import {JwtAuthenticationService} from "./jwt-authentication.service";
 })
 export class HttpAuthInterceptorService implements HttpInterceptor {
 
-  constructor(private basicAuthService: JwtAuthenticationService) {
+  constructor(private authService: JwtAuthenticationService) {
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    let authHeader = this.basicAuthService.getToken();
+    let authHeader = this.authService.getToken();
 
     if (authHeader) {
       req = req.clone({
