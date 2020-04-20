@@ -5,6 +5,7 @@ import com.todo.app.entity.User;
 import com.todo.app.repository.RoleRepository;
 import com.todo.app.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,6 +24,7 @@ public class JpaUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
 
+    @Cacheable("userDetails")
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
